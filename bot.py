@@ -42,7 +42,7 @@ ADMIN_IDS = {
     if x.strip()
 }
 
-BOT_USERNAME = os.getenv("BOT_USERNAME", "PagaLEscrowBot").lstrip("@")
+BOT_USERNAME = os.getenv("BOT_USERNAME", "PegeLEscrowBot").lstrip("@")
 
 # All start/menu redirect buttons from the screenshots point to
 # the same destination.
