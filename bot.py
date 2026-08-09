@@ -756,7 +756,7 @@ def make_transaction_photo(e):
 
     except Exception:
         return None
-        async def transaction_photo(eid):
+async def transaction_photo(eid):
     e = get_escrow(eid)
 
     if not e:
