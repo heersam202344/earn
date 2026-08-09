@@ -10,7 +10,12 @@ from PIL import Image, ImageDraw, ImageFont
 from aiogram import Bot, Dispatcher, F
 from aiogram.enums import ParseMode
 from aiogram.filters import Command, CommandObject
-from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import (
+    Message,
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
 from aiogram.client.default import DefaultBotProperties
 
 from telethon import TelegramClient
@@ -35,29 +40,32 @@ ADMIN_IDS = {
 
 BOT_USERNAME = os.getenv(
     "BOT_USERNAME",
-    "PagaLEscrowBot"
+    "PagaLEscrowBot",
 ).lstrip("@")
 
-FEE_PERCENT = os.getenv("FEE_PERCENT", "1.0")
+FEE_PERCENT = os.getenv(
+    "FEE_PERCENT",
+    "1.0",
+)
 
 CHANNEL_USERNAME = os.getenv(
     "CHANNEL_USERNAME",
-    "PagalWorlldSojao"
+    "PagalWorlldSojao",
 ).lstrip("@")
 
 GROUP_INITIAL_PHOTO = os.getenv(
     "GROUP_INITIAL_PHOTO",
-    ""
+    "",
 )
 
 GROUP_TRANSACTION_PHOTO = os.getenv(
     "GROUP_TRANSACTION_PHOTO",
-    ""
+    "",
 )
 
 PHOTO_TEMPLATE = os.getenv(
     "PHOTO_TEMPLATE",
-    "assets/escrow_photo_template.png"
+    "assets/escrow_photo_template.png",
 )
 
 
@@ -66,7 +74,7 @@ DB.parent.mkdir(exist_ok=True)
 
 conn = sqlite3.connect(
     DB,
-    check_same_thread=False
+    check_same_thread=False,
 )
 
 conn.row_factory = sqlite3.Row
@@ -129,7 +137,7 @@ Avoid scams, your funds are safeguarded throughout your deals. If you run into a
 def url_button(text: str):
     return InlineKeyboardButton(
         text=text,
-        url=f"https://t.me/{CHANNEL_USERNAME}"
+        url=f"https://t.me/{CHANNEL_USERNAME}",
     )
 
 
@@ -139,40 +147,34 @@ def start_kb():
             [
                 InlineKeyboardButton(
                     text="P2P",
-                    callback_data="type_p2p"
+                    callback_data="type_p2p",
                 ),
                 InlineKeyboardButton(
                     text="Product Deal",
-                    callback_data="type_product"
-                )
+                    callback_data="type_product",
+                ),
             ],
-
             [
-                url_button("COMMANDS LIST 🤖")
+                url_button("COMMANDS LIST 🤖"),
             ],
-
             [
-                url_button("☎️ CONTACT")
+                url_button("☎️ CONTACT"),
             ],
-
             [
                 url_button("Updates 🔄"),
-                url_button("Vouches ✔️")
+                url_button("Vouches ✔️"),
             ],
-
             [
                 url_button("WHAT IS ESCROW ?"),
-                url_button("Instructions 👩‍🏫")
+                url_button("Instructions 👩‍🏫"),
             ],
-
             [
-                url_button("Terms 📝")
+                url_button("Terms 📝"),
             ],
-
             [
-                url_button("Invites 👤")
-            ]
-        ]
+                url_button("Invites 👤"),
+            ],
+        ],
     )
 
 
@@ -180,31 +182,26 @@ def menu_kb():
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                url_button("COMMANDS LIST 🤖")
+                url_button("COMMANDS LIST 🤖"),
             ],
-
             [
-                url_button("☎️ CONTACT")
+                url_button("☎️ CONTACT"),
             ],
-
             [
                 url_button("Updates 🔄"),
-                url_button("Vouches ✔️")
+                url_button("Vouches ✔️"),
             ],
-
             [
                 url_button("WHAT IS ESCROW ?"),
-                url_button("Instructions 👩‍🏫")
+                url_button("Instructions 👩‍🏫"),
             ],
-
             [
-                url_button("Terms 📝")
+                url_button("Terms 📝"),
             ],
-
             [
-                url_button("Invites 👤")
-            ]
-        ]
+                url_button("Invites 👤"),
+            ],
+        ],
     )
 
 
@@ -214,14 +211,14 @@ def escrow_type_kb():
             [
                 InlineKeyboardButton(
                     text="P2P",
-                    callback_data="type_p2p"
+                    callback_data="type_p2p",
                 ),
                 InlineKeyboardButton(
                     text="Product Deal",
-                    callback_data="type_product"
-                )
-            ]
-        ]
+                    callback_data="type_product",
+                ),
+            ],
+        ],
     )
 
 
@@ -231,21 +228,20 @@ def token_kb():
             [
                 InlineKeyboardButton(
                     text="LTC",
-                    callback_data="token_ltc"
+                    callback_data="token_ltc",
                 ),
                 InlineKeyboardButton(
                     text="BTC",
-                    callback_data="token_btc"
-                )
+                    callback_data="token_btc",
+                ),
             ],
-
             [
                 InlineKeyboardButton(
                     text="USDT",
-                    callback_data="token_usdt"
-                )
-            ]
-        ]
+                    callback_data="token_usdt",
+                ),
+            ],
+        ],
     )
 
 
@@ -255,21 +251,20 @@ def network_kb():
             [
                 InlineKeyboardButton(
                     text="BSC[BEP20]",
-                    callback_data="net_bsc"
+                    callback_data="net_bsc",
                 ),
                 InlineKeyboardButton(
                     text="TRON[TRC20]",
-                    callback_data="net_tron"
-                )
+                    callback_data="net_tron",
+                ),
             ],
-
             [
                 InlineKeyboardButton(
                     text="Back ⬅️",
-                    callback_data="back_token"
-                )
-            ]
-        ]
+                    callback_data="back_token",
+                ),
+            ],
+        ],
     )
 
 
@@ -279,14 +274,14 @@ def accept_kb():
             [
                 InlineKeyboardButton(
                     text="Accept ✅",
-                    callback_data="accept_trade"
+                    callback_data="accept_trade",
                 ),
                 InlineKeyboardButton(
                     text="Reject ❌",
-                    callback_data="reject_trade"
-                )
-            ]
-        ]
+                    callback_data="reject_trade",
+                ),
+            ],
+        ],
     )
 
 
@@ -296,22 +291,21 @@ def deposit_kb():
             [
                 InlineKeyboardButton(
                     text="Check Payment",
-                    callback_data="check_payment"
-                )
-            ]
-        ]
+                    callback_data="check_payment",
+                ),
+            ],
+        ],
     )
 
 
 def get_escrow(eid):
     return conn.execute(
         "SELECT * FROM escrows WHERE id=?",
-        (eid,)
+        (eid,),
     ).fetchone()
 
 
 def update_eid(eid, **kwargs):
-
     if not kwargs:
         return
 
@@ -324,14 +318,13 @@ def update_eid(eid, **kwargs):
 
     conn.execute(
         f"UPDATE escrows SET {cols} WHERE id=?",
-        vals
+        vals,
     )
 
     conn.commit()
 
 
 def latest_for_user(uid):
-
     return conn.execute(
         """
         SELECT *
@@ -340,12 +333,11 @@ def latest_for_user(uid):
         ORDER BY id DESC
         LIMIT 1
         """,
-        (uid,)
+        (uid,),
     ).fetchone()
 
 
 def latest_for_chat(chat_id):
-
     return conn.execute(
         """
         SELECT *
@@ -354,12 +346,11 @@ def latest_for_chat(chat_id):
         ORDER BY id DESC
         LIMIT 1
         """,
-        (chat_id,)
+        (chat_id,),
     ).fetchone()
 
 
 def display_name(user):
-
     return (
         user.full_name
         or user.first_name
@@ -369,7 +360,6 @@ def display_name(user):
 
 
 def tx_decl(e):
-
     return f"""📌 <b>ESCROW DECLARATION</b>
 
 ⚡ Buyer @{e['buyer_username'] or 'unknown'} | Userid: [{e['buyer_id'] or '-'}]
@@ -380,7 +370,6 @@ def tx_decl(e):
 
 
 def transaction_info(e):
-
     return f"""📌 <b>TRANSACTION INFORMATION [{e['trade_code']}]</b>
 
 ⚡ <b>SELLER</b>
@@ -401,31 +390,28 @@ def transaction_info(e):
 
 
 def configured_deposit_address(e):
-
     key = "DEPOSIT_ADDRESS_" + (
         e["crypto"] or ""
     ).upper()
 
     if e["crypto"] == "USDT":
-
         key += "_" + (
             e["network"] or ""
         ).upper().replace(
             "TRON",
-            "TRC20"
+            "TRC20",
         )
 
     return os.getenv(
         key,
-        "YOUR_DEPOSIT_ADDRESS"
+        "YOUR_DEPOSIT_ADDRESS",
     )
 
 
 async def set_group_photo(
     eid: int,
-    path: str
+    path: str,
 ):
-
     if not path or not os.path.exists(path):
         return False
 
@@ -435,7 +421,6 @@ async def set_group_photo(
         return False
 
     try:
-
         e = get_escrow(eid)
 
         if not e or not e["group_id"]:
@@ -454,7 +439,7 @@ async def set_group_photo(
                 entity,
                 InputChatUploadedPhoto(
                     file=uploaded
-                )
+                ),
             )
         )
 
@@ -469,16 +454,14 @@ async def set_group_photo(
 
 async def edit_group_title(
     eid: int,
-    title: str
+    title: str,
 ):
-
     client = await telethon_client()
 
     if not client:
         return False
 
     try:
-
         e = get_escrow(eid)
 
         if not e or not e["group_id"]:
@@ -491,13 +474,13 @@ async def edit_group_title(
         await client(
             EditTitleRequest(
                 entity,
-                title
+                title,
             )
         )
 
         update_eid(
             eid,
-            group_title=title
+            group_title=title,
         )
 
         return True
@@ -510,7 +493,6 @@ async def edit_group_title(
 
 
 async def telethon_client():
-
     api_id = os.getenv("API_ID")
     api_hash = os.getenv("API_HASH")
     session = os.getenv("STRING_SESSION")
@@ -525,7 +507,7 @@ async def telethon_client():
     client = TelegramClient(
         StringSession(session),
         int(api_id),
-        api_hash
+        api_hash,
     )
 
     await client.start()
@@ -535,9 +517,8 @@ async def telethon_client():
 
 async def create_escrow(
     uid,
-    creator_name
+    creator_name,
 ):
-
     now = datetime.now(
         timezone.utc
     ).strftime(
@@ -547,19 +528,18 @@ async def create_escrow(
     trade_code = str(
         random.randint(
             10000000,
-            99999999
+            99999999,
         )
     )
 
     while conn.execute(
         "SELECT 1 FROM escrows WHERE trade_code=?",
-        (trade_code,)
+        (trade_code,),
     ).fetchone():
-
         trade_code = str(
             random.randint(
                 10000000,
-                99999999
+                99999999,
             )
         )
 
@@ -579,8 +559,8 @@ async def create_escrow(
             uid,
             creator_name,
             now,
-            FEE_PERCENT
-        )
+            FEE_PERCENT,
+        ),
     )
 
     conn.commit()
@@ -590,21 +570,19 @@ async def create_escrow(
 
 async def create_private_group(
     eid,
-    creator_id
+    creator_id,
 ):
-
     client = await telethon_client()
 
     if not client:
         return None
 
     try:
-
         result = await client(
             CreateChannelRequest(
                 title="P2P Escrow By PAGAL Bot",
                 about="📌 Hey there traders! Welcome to our escrow service.",
-                megagroup=True
+                megagroup=True,
             )
         )
 
@@ -623,20 +601,18 @@ async def create_private_group(
         link = getattr(
             inv,
             "link",
-            None
+            None,
         )
 
         update_eid(
             eid,
             group_id=chat.id,
             group_title="P2P Escrow By PAGAL Bot",
-            invite_link=link
+            invite_link=link,
         )
 
         if BOT_USERNAME:
-
             try:
-
                 bot_entity = await client.get_entity(
                     BOT_USERNAME
                 )
@@ -644,7 +620,7 @@ async def create_private_group(
                 await client(
                     InviteToChannelRequest(
                         entity,
-                        [bot_entity]
+                        [bot_entity],
                     )
                 )
 
@@ -652,9 +628,7 @@ async def create_private_group(
                 pass
 
         if GROUP_INITIAL_PHOTO:
-
             try:
-
                 uploaded = await client.upload_file(
                     GROUP_INITIAL_PHOTO
                 )
@@ -664,7 +638,7 @@ async def create_private_group(
                         entity,
                         InputChatUploadedPhoto(
                             file=uploaded
-                        )
+                        ),
                     )
                 )
 
@@ -681,30 +655,26 @@ async def create_private_group(
 
 
 async def rename_on_dd(eid):
-
     e = get_escrow(eid)
 
     if e and e["group_id"]:
-
         await edit_group_title(
             eid,
-            f"P2P Escrow By PAGAL Bot ({e['trade_code']})"
+            f"P2P Escrow By PAGAL Bot ({e['trade_code']})",
         )
 
 
 def make_transaction_photo(e):
-
     out = (
         Path("data")
         / f"escrow_photo_{e['id']}.jpg"
     )
 
     try:
-
         canvas = Image.new(
             "RGB",
             (640, 640),
-            (4, 5, 6)
+            (4, 5, 6),
         )
 
         draw = ImageDraw.Draw(
@@ -714,7 +684,6 @@ def make_transaction_photo(e):
         if os.path.exists(
             PHOTO_TEMPLATE
         ):
-
             logo = Image.open(
                 PHOTO_TEMPLATE
             ).convert("RGB")
@@ -727,24 +696,22 @@ def make_transaction_photo(e):
                 logo,
                 (
                     (640 - logo.width) // 2,
-                    35
-                )
+                    35,
+                ),
             )
 
         try:
-
             bold = ImageFont.truetype(
                 "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-                34
+                34,
             )
 
             normal = ImageFont.truetype(
                 "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-                30
+                30,
             )
 
         except Exception:
-
             bold = normal = ImageFont.load_default()
 
         buyer = (
@@ -763,34 +730,33 @@ def make_transaction_photo(e):
             (80, 400),
             "💰 BUYER:  @" + str(buyer),
             font=bold,
-            fill="white"
+            fill="white",
         )
 
         draw.text(
             (80, 470),
             "💰 SELLER: @" + str(seller),
             font=bold,
-            fill="white"
+            fill="white",
         )
 
         draw.text(
             (80, 545),
             f"TRADE: {e['trade_code']}",
             font=normal,
-            fill="white"
+            fill="white",
         )
 
         canvas.save(
             out,
-            quality=92
+            quality=92,
         )
 
         return str(out)
 
     except Exception:
         return None
-      async def transaction_photo(eid):
-
+        async def transaction_photo(eid):
     e = get_escrow(eid)
 
     if not e:
@@ -804,37 +770,34 @@ def make_transaction_photo(e):
     if path:
         await set_group_photo(
             eid,
-            path
+            path,
         )
 
 
 @dp.message(Command("start"))
 async def start(m: Message):
-
     await m.answer(
         WELCOME.format(
             channel=CHANNEL_USERNAME
         ),
         reply_markup=start_kb(),
-        disable_web_page_preview=True
+        disable_web_page_preview=True,
     )
 
 
 @dp.message(Command("menu"))
 async def menu(m: Message):
-
     await m.answer(
         "💡 <b>Commands / Menu</b>",
-        reply_markup=menu_kb()
+        reply_markup=menu_kb(),
     )
 
 
 @dp.message(Command("escrow"))
 async def escrow(m: Message):
-
     await m.answer(
         "Please select your escrow type from below.",
-        reply_markup=escrow_type_kb()
+        reply_markup=escrow_type_kb(),
     )
 
 
@@ -842,22 +805,19 @@ async def escrow(m: Message):
     F.data.startswith("type_")
 )
 async def type_callback(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     if c.data == "type_product":
-
         await c.message.answer(
             "Product Deal selected."
         )
 
         await c.answer()
-
         return
 
     eid = await create_escrow(
         c.from_user.id,
-        display_name(c.from_user)
+        display_name(c.from_user),
     )
 
     await c.message.answer(
@@ -866,24 +826,22 @@ async def type_callback(
 
     link = await create_private_group(
         eid,
-        c.from_user.id
+        c.from_user.id,
     )
 
     e = get_escrow(eid)
 
     if link:
-
         await c.message.answer(
             f"<b>Escrow Group Created</b>\n\n"
             f"Creator: {e['creator_name']}\n\n"
             f"Join this escrow group and share the link with the buyer and seller.\n\n"
             f"<code>{link}</code>\n\n"
             f"⚠️ Note: This link is for 2 members only—third parties are not allowed to join.",
-            disable_web_page_preview=True
+            disable_web_page_preview=True,
         )
 
     else:
-
         await c.message.answer(
             "Group creation helper is not configured. Set API_ID, API_HASH and STRING_SESSION."
         )
@@ -895,12 +853,11 @@ async def type_callback(
     F.data == "token_ltc"
 )
 async def token_ltc(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     await select_token(
         c,
-        "LTC"
+        "LTC",
     )
 
 
@@ -908,12 +865,11 @@ async def token_ltc(
     F.data == "token_btc"
 )
 async def token_btc(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     await select_token(
         c,
-        "BTC"
+        "BTC",
     )
 
 
@@ -921,12 +877,11 @@ async def token_btc(
     F.data == "token_usdt"
 )
 async def token_usdt(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     await select_token(
         c,
-        "USDT"
+        "USDT",
     )
 
 
@@ -934,12 +889,11 @@ async def token_usdt(
     F.data == "net_bsc"
 )
 async def net_bsc(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     await finish_token(
         c,
-        "BSC"
+        "BSC",
     )
 
 
@@ -947,12 +901,11 @@ async def net_bsc(
     F.data == "net_tron"
 )
 async def net_tron(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     await finish_token(
         c,
-        "TRON"
+        "TRON",
     )
 
 
@@ -960,12 +913,11 @@ async def net_tron(
     F.data == "back_token"
 )
 async def back_token(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     await c.message.edit_text(
         "<b>choose token from the list below</b>",
-        reply_markup=token_kb()
+        reply_markup=token_kb(),
     )
 
     await c.answer()
@@ -975,31 +927,27 @@ async def back_token(
     F.data == "accept_trade"
 )
 async def accept_trade(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     e = latest_for_chat(
         c.message.chat.id
     )
 
     if not e:
-
         e = latest_for_user(
             c.from_user.id
         )
 
     if not e:
-
         await c.answer(
             "No escrow found.",
-            show_alert=True
+            show_alert=True,
         )
-
         return
 
     update_eid(
         e["id"],
-        status="accepted"
+        status="accepted",
     )
 
     e = get_escrow(
@@ -1027,9 +975,8 @@ async def accept_trade(
     F.data == "reject_trade"
 )
 async def reject_trade(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     e = (
         latest_for_chat(
             c.message.chat.id
@@ -1040,10 +987,9 @@ async def reject_trade(
     )
 
     if e:
-
         update_eid(
             e["id"],
-            status="rejected"
+            status="rejected",
         )
 
     await c.message.answer(
@@ -1059,9 +1005,8 @@ async def reject_trade(
     F.data == "check_payment"
 )
 async def check_payment(
-    c: CallbackQuery
+    c: CallbackQuery,
 ):
-
     await c.message.answer(
         "🔎 <b>CHECK PAYMENT</b>\n"
         "Payment verification is ready for your payment integration."
@@ -1072,9 +1017,8 @@ async def check_payment(
 
 async def select_token(
     c,
-    crypto
+    crypto,
 ):
-
     e = (
         latest_for_chat(
             c.message.chat.id
@@ -1085,34 +1029,30 @@ async def select_token(
     )
 
     if not e:
-
         await c.answer(
             "No escrow found.",
-            show_alert=True
+            show_alert=True,
         )
-
         return
 
     update_eid(
         e["id"],
-        crypto=crypto
+        crypto=crypto,
     )
 
     if crypto == "USDT":
-
         await c.message.edit_text(
             "📌 <b>ESCROW-CRYPTO DECLARATION</b>\n\n"
             "✅ <b>CRYPTO</b>\n"
             "USDT\n\n"
             "<b>choose network from the list below for USDT</b>",
-            reply_markup=network_kb()
+            reply_markup=network_kb(),
         )
 
     else:
-
         await finish_token(
             c,
-            None
+            None,
         )
 
     await c.answer()
@@ -1120,9 +1060,8 @@ async def select_token(
 
 async def finish_token(
     c,
-    network
+    network,
 ):
-
     e = (
         latest_for_chat(
             c.message.chat.id
@@ -1133,17 +1072,15 @@ async def finish_token(
     )
 
     if not e:
-
         await c.answer(
             "No escrow found.",
-            show_alert=True
+            show_alert=True,
         )
-
         return
 
     update_eid(
         e["id"],
-        network=network
+        network=network,
     )
 
     e = get_escrow(
@@ -1152,7 +1089,7 @@ async def finish_token(
 
     await c.message.answer(
         tx_decl(e),
-        reply_markup=accept_kb()
+        reply_markup=accept_kb(),
     )
 
     await c.answer()
@@ -1160,9 +1097,8 @@ async def finish_token(
 
 @dp.message(Command("dd"))
 async def dd(
-    m: Message
+    m: Message,
 ):
-
     e = (
         latest_for_chat(
             m.chat.id
@@ -1173,7 +1109,6 @@ async def dd(
     )
 
     if e and e["group_id"] == m.chat.id:
-
         await rename_on_dd(
             e["id"]
         )
@@ -1192,9 +1127,8 @@ async def dd(
 @dp.message(Command("buyer"))
 async def buyer(
     m: Message,
-    command: CommandObject
+    command: CommandObject,
 ):
-
     e = (
         latest_for_chat(
             m.chat.id
@@ -1205,11 +1139,9 @@ async def buyer(
     )
 
     if not e:
-
         await m.answer(
             "No active escrow found."
         )
-
         return
 
     address = (
@@ -1217,18 +1149,16 @@ async def buyer(
     ).strip()
 
     if not address:
-
         await m.answer(
             "Please use /buyer [DEPOSIT ADDRESS]"
         )
-
         return
 
     update_eid(
         e["id"],
         buyer_id=m.from_user.id,
         buyer_username=m.from_user.username,
-        buyer_wallet=address
+        buyer_wallet=address,
     )
 
     await m.answer(
@@ -1247,9 +1177,8 @@ async def buyer(
 @dp.message(Command("seller"))
 async def seller(
     m: Message,
-    command: CommandObject
+    command: CommandObject,
 ):
-
     e = (
         latest_for_chat(
             m.chat.id
@@ -1260,11 +1189,9 @@ async def seller(
     )
 
     if not e:
-
         await m.answer(
             "No active escrow found."
         )
-
         return
 
     address = (
@@ -1272,18 +1199,16 @@ async def seller(
     ).strip()
 
     if not address:
-
         await m.answer(
             "Please use /seller [DEPOSIT ADDRESS]"
         )
-
         return
 
     update_eid(
         e["id"],
         seller_id=m.from_user.id,
         seller_username=m.from_user.username,
-        seller_wallet=address
+        seller_wallet=address,
     )
 
     await m.answer(
@@ -1301,20 +1226,18 @@ async def seller(
 
 @dp.message(Command("token"))
 async def token(
-    m: Message
+    m: Message,
 ):
-
     await m.answer(
         "<b>choose token from the list below</b>",
-        reply_markup=token_kb()
+        reply_markup=token_kb(),
     )
 
 
 @dp.message(Command("deposit"))
 async def deposit(
-    m: Message
+    m: Message,
 ):
-
     e = (
         latest_for_chat(
             m.chat.id
@@ -1325,11 +1248,9 @@ async def deposit(
     )
 
     if not e:
-
         await m.answer(
             "No active escrow found."
         )
-
         return
 
     address = configured_deposit_address(
@@ -1339,7 +1260,7 @@ async def deposit(
     update_eid(
         e["id"],
         deposit_address=address,
-        status="deposit_ready"
+        status="deposit_ready",
     )
 
     e = get_escrow(
@@ -1364,30 +1285,27 @@ async def deposit(
         "📄 /release = Will Release The Funds To Buyer.\n\n"
         "📄 /refund = Will Refund The Funds To Seller.\n\n"
         "Remember, once commands are used payment will be released, there is no revert!",
-        reply_markup=deposit_kb()
+        reply_markup=deposit_kb(),
     )
 
 
 @dp.message(Command("release"))
 async def release(
-    m: Message
+    m: Message,
 ):
-
     e = latest_for_chat(
         m.chat.id
     )
 
     if not e:
-
         await m.answer(
             "No active escrow found."
         )
-
         return
 
     update_eid(
         e["id"],
-        status="release_requested"
+        status="release_requested",
     )
 
     await m.answer(
@@ -1397,24 +1315,21 @@ async def release(
 
 @dp.message(Command("refund"))
 async def refund(
-    m: Message
+    m: Message,
 ):
-
     e = latest_for_chat(
         m.chat.id
     )
 
     if not e:
-
         await m.answer(
             "No active escrow found."
         )
-
         return
 
     update_eid(
         e["id"],
-        status="refund_requested"
+        status="refund_requested",
     )
 
     await m.answer(
@@ -1424,9 +1339,8 @@ async def refund(
 
 @dp.message(Command("dispute"))
 async def dispute(
-    m: Message
+    m: Message,
 ):
-
     await m.answer(
         "⚖️ <b>DISPUTE</b>\n"
         "An arbitrator/support member should review this trade."
@@ -1434,12 +1348,11 @@ async def dispute(
 
 
 async def main():
-
     bot = Bot(
         BOT_TOKEN,
         default=DefaultBotProperties(
             parse_mode=ParseMode.HTML
-        )
+        ),
     )
 
     await dp.start_polling(
